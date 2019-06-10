@@ -1,14 +1,25 @@
 <?php
-    // Create a mySQL DB connection
-    $dbhost = "182.50.133.51";
-    $dbuser = "studDB19A";
-    $dbpass = "stud19aDB1!";
-    $dbname = "studDB19A";
+    $errorMsg = '';
 
-    $connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-    // Testing connection success
-    if(mysqli_connect_errno()) {
-        die("DB connection failed: " . mysqli_connect_error() . " (" . mysqli_connect_errno() . ")");
+    if(isset($_POST['password']) AND isset($_POST['userEmail'])) {
+        $userEmail = $_POST['userEmail'];
+        $password = $_POST['password'];
+
+        include 'db.php';
+
+        $query = 'SELECT id FROM tb_users_200 WHERE email = "' . $userEmail . '" AND password = "' . $password . '";';
+
+        // DEBUG:
+        // echo $query;
+
+        $result = mysqli_query($connection, $query);
+        if(!$result->num_rows) {
+            $errorMsg = 'Invalid username or password';
+        } else {
+            mysqli_free_result($result);
+            mysqli_close($connection);
+            header('Location: index.php');
+        }
     }
 
     ?>
@@ -17,30 +28,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
+
+
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>SQL+PHP</title>
+
+    <form action="index3.php" method="post">
+        <label for="userEmail">Email:</label><input type="email" value="" id="userEmail" name="userEmail"> <br> <br>
+        <label for="password">Password:</label><input type="password" value="" id="password" name="password"> <br> <br>
+        <div class="error"><? echo $errorMsg ?></div>
+        <input type="submit" value="LOGIN">
+    </form>
 </head>
 <body>
-    <?php
-    echo '<h1>You are successfully connected to </h1>' . $dbname;
 
-    $query = "SELECT * FROM tbl_test";
-    $result = mysqli_query($connection, $query);
-
-    if(!$result) die('DB Query failed!');
-
-    echo '<ul>';
-    while($row = mysqli_fetch_assoc($result)){
-        echo '<li><h3 onclick="changeColor()">' . $row['title']. '</h3>';
-        echo '<p>' . $row['txt'] . '</p>';
-    }
-    echo '</ul>';
-
-    // release return data
-    mysqli_free_result($result);
-    // close the connection
-    mysqli_close($connection);
-    ?>
 </body>
 </html>
