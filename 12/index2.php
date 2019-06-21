@@ -17,13 +17,14 @@
 
     $query = "SELECT * FROM tbl_test";
     $result = mysqli_query($connection, $query);
-
-    if(!$result) die('DB Query failed!');
+    if(!$result->num_rows) die('DB Query failed!');
 
     echo '<ul>';
     while($row = mysqli_fetch_assoc($result)){
-        echo '<li><h3 onclick="changeColor()">' . $row['title']. '</h3>';
+        echo '<li><h3 onclick="changeColor()">' . $row['title'] . '</h3>';
         echo '<p>' . $row['txt'] . '</p>';
+        echo '</li>';
+
     }
     echo '</ul>';
 

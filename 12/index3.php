@@ -40,6 +40,8 @@
         <div class="error"><? echo $errorMsg ?></div>
         <input type="submit" value="LOGIN">
     </form>
+
+
 </head>
 <body>
 
